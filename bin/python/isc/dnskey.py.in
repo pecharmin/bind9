@@ -174,7 +174,7 @@ class dnskey:
                  ttl, publish=None, activate=None, **kwargs):
         quiet = kwargs.get('quiet', False)
 
-        keygen_cmd = [keygen_bin, "-K", keys_dir, "-L", str(ttl)]
+        keygen_cmd = [keygen_bin, "-q", "-K", keys_dir, "-L", str(ttl)]
 
         if randomdev:
             keygen_cmd += ["-r", randomdev]
@@ -219,7 +219,7 @@ class dnskey:
         if not self.inactive():
             raise Exception("predecessor key %s has no inactive date" % self)
 
-        keygen_cmd = [keygen_bin, "-K", self._dir, "-S", self.keystr]
+        keygen_cmd = [keygen_bin, "-q", "-K", self._dir, "-S", self.keystr]
 
         if self.ttl:
             keygen_cmd += ["-L", str(self.ttl)]
