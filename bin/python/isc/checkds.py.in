@@ -100,7 +100,7 @@ class SECRR:
 def check(zone, args, masterfile=None, lookaside=None):
     rrlist = []
     cmd = [args.dig, "+noall", "+answer", "-t", "dlv" if lookaside else "ds",
-           "-q", zone + "." + lookaside if lookaside else zone]
+           zone + "." + lookaside if lookaside else zone]
     fp, _ = Popen(cmd, stdout=PIPE).communicate()
 
     for line in fp.splitlines():
@@ -117,7 +117,7 @@ def check(zone, args, masterfile=None, lookaside=None):
         fp, _ = Popen(cmd, stdout=PIPE).communicate()
     else:
         intods, _ = Popen([args.dig, "+noall", "+answer", "-t", "dnskey",
-                           "-q", zone], stdout=PIPE).communicate()
+                           zone], stdout=PIPE).communicate()
         cmd = [args.dsfromkey, "-f", "-"]
         if lookaside:
             cmd += ["-l", lookaside]
