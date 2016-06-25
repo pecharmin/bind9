@@ -154,14 +154,14 @@ file can specify three kinds of policies:
 .IP \(bu 2.3
 .\}
 \fIPolicy classes\fR
-	(\fBpolicy \fR\fB\fIname\fR\fR\fB { \&.\&.\&. };\fR)
-	can be inherited by zone policies or other policy classes; these
-	can be used to create sets of different security profiles\&. For
-	example, a policy class \fBnormal\fR might specify
-	1024\-bit key sizes, but a class \fBextra\fR might
-	specify 2048 bits instead; \fBextra\fR would be
-	used for zones that had unusually high security needs\&.
-      .RE
+  (\fBpolicy \fR\fB\fIname\fR\fR\fB { \&.\&.\&. };\fR)
+  can be inherited by zone policies or other policy classes; these
+  can be used to create sets of different security profiles\&. For
+  example, a policy class \fBnormal\fR might specify
+  1024\-bit key sizes, but a class \fBextra\fR might
+  specify 2048 bits instead; \fBextra\fR would be
+  used for zones that had unusually high security needs\&.
+.RE
 .sp
 .RS 4
 .ie n \{\
@@ -171,13 +171,13 @@ file can specify three kinds of policies:
 .sp -1
 .IP \(bu 2.3
 .\}
-	Algorithm policies:
-	(\fBalgorithm\-policy \fR\fB\fIalgorithm\fR\fR\fB { \&.\&.\&. };\fR )
-	override default per\-algorithm settings\&.  For example, by default,
-	RSASHA256 keys use 2048\-bit key sizes for both KSK and ZSK\&. This
-	can be modified using \fBalgorithm\-policy\fR, and the
-	new key sizes would then be used for any key of type RSASHA256\&.
-      .RE
+  Algorithm policies:
+  (\fBalgorithm\-policy \fR\fB\fIalgorithm\fR\fR\fB { \&.\&.\&. };\fR )
+  override default per\-algorithm settings\&.  For example, by default,
+  RSASHA256 keys use 2048\-bit key sizes for both KSK and ZSK\&. This
+  can be modified using \fBalgorithm\-policy\fR, and the
+  new key sizes would then be used for any key of type RSASHA256\&.
+.RE
 .sp
 .RS 4
 .ie n \{\
@@ -187,85 +187,85 @@ file can specify three kinds of policies:
 .sp -1
 .IP \(bu 2.3
 .\}
-	Zone policies:
-	(\fBzone \fR\fB\fIname\fR\fR\fB { \&.\&.\&. };\fR )
-	set policy for a single zone by name\&. A zone policy can inherit
-	a policy class by including a \fBpolicy\fR option\&.
-      .RE
+  Zone policies:
+  (\fBzone \fR\fB\fIname\fR\fR\fB { \&.\&.\&. };\fR )
+  set policy for a single zone by name\&. A zone policy can inherit
+  a policy class by including a \fBpolicy\fR option\&.
+.RE
 .PP
 Options that can be specified in policies:
 .PP
 \fBalgorithm\fR
 .RS 4
-	  The key algorithm\&. If no policy is defined, the default is
-          RSASHA256\&.
-	.RE
+The key algorithm\&. If no policy is defined, the default is
+RSASHA256\&.
+.RE
 .PP
 \fBcoverage\fR
 .RS 4
-	  The length of time to ensure that keys will be correct; no action
-          will be taken to create new keys to be activated after this time\&.
-          This can be represented as a number of seconds, or as a duration using
-	  human\-readable units (examples: "1y" or "6 months")\&.
-	  A default value for this option can be set in algorithm policies
-	  as well as in policy classes or zone policies\&.
-          If no policy is configured, the default is six months\&.
-	.RE
+The length of time to ensure that keys will be correct; no action
+will be taken to create new keys to be activated after this time\&.
+This can be represented as a number of seconds, or as a duration using
+human\-readable units (examples: "1y" or "6 months")\&.
+A default value for this option can be set in algorithm policies
+as well as in policy classes or zone policies\&.
+If no policy is configured, the default is six months\&.
+.RE
 .PP
 \fBdirectory\fR
 .RS 4
-	  Specifies the directory in which keys should be stored\&.
-	.RE
+Specifies the directory in which keys should be stored\&.
+.RE
 .PP
 \fBkey\-size\fR
 .RS 4
-	  Specifies the number of bits to use in creating keys\&.
-	  Takes two arguments: keytype (eihter "zsk" or "ksk") and size\&.
-	  A default value for this option can be set in algorithm policies
-	  as well as in policy classes or zone policies\&. If no policy is
-          configured, the default is 1024 bits for DSA keys and 2048 for
-          RSA\&.
-	.RE
+Specifies the number of bits to use in creating keys\&.
+Takes two arguments: keytype (eihter "zsk" or "ksk") and size\&.
+A default value for this option can be set in algorithm policies
+as well as in policy classes or zone policies\&. If no policy is
+configured, the default is 1024 bits for DSA keys and 2048 for
+RSA\&.
+.RE
 .PP
 \fBkeyttl\fR
 .RS 4
-	  The key TTL\&. If no policy is defined, the default is one hour\&.
-	.RE
+The key TTL\&. If no policy is defined, the default is one hour\&.
+.RE
 .PP
 \fBpost\-publish\fR
 .RS 4
-	  How long after inactivation a key should be deleted from the zone\&.
-	  Note: If \fBroll\-period\fR is not set, this value is
-	  ignored\&. Takes two arguments: keytype (eihter "zsk" or "ksk") and a
-	  duration\&. A default value for this option can be set in algorithm
-	  policies as well as in policy classes or zone policies\&. The default
-	  is one month\&.
-	.RE
+How long after inactivation a key should be deleted from the zone\&.
+Note: If \fBroll\-period\fR is not set, this value is
+ignored\&. Takes two arguments: keytype (eihter "zsk" or "ksk") and a
+duration\&. A default value for this option can be set in algorithm
+policies as well as in policy classes or zone policies\&. The default
+is one month\&.
+.RE
 .PP
 \fBpre\-publish\fR
 .RS 4
-	  How long before activation a key should be published\&.  Note: If
-          \fBroll\-period\fR is not set, this value is ignored\&.
-	  Takes two arguments: keytype (either "zsk" or "ksk") and a duration\&.
-	  A default value for this option can be set in algorithm policies
-	  as well as in policy classes or zone policies\&.  The default is
-          one month\&.
-	.RE
+How long before activation a key should be published\&.
+Note: If \fBroll\-period\fR is not set, this value is ignored\&.
+Takes two arguments: keytype (either "zsk" or "ksk") and a duration\&.
+A default value for this option can be set in algorithm policies
+as well as in policy classes or zone policies\&.  The default is
+one month\&.
+.RE
 .PP
 \fBroll\-period\fR
 .RS 4
-	  How frequently keys should be rolled over\&.
-	  Takes two arguments: keytype (eihter "zsk" or "ksk") and a duration\&.
-	  A default value for this option can be set in algorithm policies
-	  as well as in policy classes or zone policies\&.  If no policy is
-          configured, the default is one year for ZSK\*(Aqs\&. KSK\*(Aqs do not
-          roll over by default\&.
-	.RE
+How frequently keys should be rolled over\&.
+Takes two arguments: keytype (eihter "zsk" or "ksk") and a duration\&.
+A default value for this option can be set in algorithm policies
+as well as in policy classes or zone policies\&.  If no policy is
+configured, the default is one year for ZSK\*(Aqs\&. KSK\*(Aqs do not
+roll over by default\&.
+.RE
 .PP
 \fBstandby\fR
 .RS 4
-	  Not yet implemented\&.
-	.RE
+Not yet implemented\&.
+.RE
 .SH "REMAINING WORK"
 .sp
 .RS 4
@@ -276,13 +276,13 @@ Options that can be specified in policies:
 .sp -1
 .IP \(bu 2.3
 .\}
-      Enable scheduling of KSK rollovers using the \fB\-P sync\fR
-      and \fB\-D sync\fR options to
-      \fBdnssec\-keygen\fR and
-      \fBdnssec\-settime\fR\&.  Check the parent zone
-      (as in \fBdnssec\-checkds\fR) to determine when it\*(Aqs
-      safe for the key to roll\&.
-    .RE
+Enable scheduling of KSK rollovers using the \fB\-P sync\fR
+and \fB\-D sync\fR options to
+\fBdnssec\-keygen\fR and
+\fBdnssec\-settime\fR\&.  Check the parent zone
+(as in \fBdnssec\-checkds\fR) to determine when it\*(Aqs
+safe for the key to roll\&.
+.RE
 .sp
 .RS 4
 .ie n \{\
@@ -292,9 +292,9 @@ Options that can be specified in policies:
 .sp -1
 .IP \(bu 2.3
 .\}
-      Allow configuration of standby keys and use of the REVOKE bit,
-      for keys that use RFC 5011 semantics\&.
-    .RE
+Allow configuration of standby keys and use of the REVOKE bit,
+for keys that use RFC 5011 semantics\&.
+.RE
 .SH "SEE ALSO"
 .PP
 \fBdnssec-coverage\fR(8),
