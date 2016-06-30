@@ -22,6 +22,7 @@ class PolicyLex:
                 'ZONE',
                 'ALGORITHM',
                 'DIRECTORY',
+                'PATH',
                 'KEYTTL',
                 'KEY_SIZE',
                 'ROLL_PERIOD',
@@ -129,6 +130,7 @@ class Policy:
     keyttl = None
     coverage = None
     directory = None
+    ds_update_bin = None
     valid_key_sz_per_algo = {'DSA': [512, 1024],
                              'NSEC3DSA': [512, 1024],
                              'RSAMD5': [512, 4096],
@@ -162,6 +164,7 @@ class Policy:
                 "\tzsk_postpublish %s\n"
                 "\tksk_standby %s\n"
                 "\tzsk_standby %s\n"
+                "\tds_update_bin %s\n"
                 "\tkeyttl %s\n"
                 %
                 ((self.is_constructed and 'constructed ' or \
@@ -182,6 +185,7 @@ class Policy:
                  self.zsk_postpublish and str(self.zsk_postpublish) or 'None',
                  self.ksk_standby and str(self.ksk_standby) or 'None',
                  self.zsk_standby and str(self.zsk_standby) or 'None',
+                 self.ds_update_bin and str(self.ds_update_bin) or 'None',
                  self.keyttl and str(self.keyttl) or 'None'))
 
     def __verify_size(self, key_size, size_range):
@@ -485,6 +489,12 @@ class dnssec_policy:
             p.zsk_postpublish = parent and \
                 parent.zsk_postpublish or ap.zsk_postpublish
 
+        if p.ds_udate_cmd is None:
+            parent = p.parent or self.named_policy['default']
+            while parent is not None and not parent.ds_udate_cmd:
+                parent = parent.parent
+            p.ds_udate_cmd = parent and parent.ds_udate_cmd
+
         if p.keyttl is None:
             parent = p.parent or self.named_policy['default']
             while parent is not None and not parent.keyttl:
@@ -591,6 +601,7 @@ class dnssec_policy:
                          | rollperiod_option
                          | prepublish_option
                          | postpublish_option
+                         | dsupdatebin_option
                          | keysize_option
                          | algorithm_option
                          | keyttl_option
@@ -621,7 +632,7 @@ class dnssec_policy:
         self.current.parent = self.named_policy[p[2].lower()]
 
     def p_directory_option(self, p):
-        "directory_option : DIRECTORY QSTRING"
+        "directory_option : FILE QSTRING"
         self.current.directory = p[2]
 
     def p_coverage_option(self, p):
@@ -662,6 +673,10 @@ class dnssec_policy:
             self.current.ksk_standby = p[3]
         else:
             self.current.zsk_standby = p[3]
+
+    def p_dsupdatebin_option(self, p):
+        "dsupdatebin_option : PATH QSTRING"
+        self.current.dsupdatebin = p[2]
 
     def p_keyttl_option(self, p):
         "keyttl_option : KEYTTL duration"

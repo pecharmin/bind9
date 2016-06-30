@@ -142,6 +142,8 @@ class keyseries:
         for key in keys:
             key.commit(self._context['settime_path'], **kwargs)
 
+        return keys
+
 
     def enforce_policy(self, policies, now=time.time(), **kwargs):
         # If zones is provided as a parameter, use that list.
@@ -183,7 +185,14 @@ class keyseries:
                     if algorithm != algnum:
                         continue
                     try:
-                        self.fixseries(keys, policy, now, **kwargs)
+                        if policy.ds_update_bin is not None:
+                            fixed_keys = self.fixseries(keys, policy,
+                                                        now, **kwargs)
+                            if set(keys) != set(fixed_keys):
+                                print("TODO: trigger DS update for %s" %zone)
+                        else:
+                            self.fixseries(keys, policy, now, **kwargs)
+
                     except Exception as e:
                         raise Exception('%s/%s: %s' %
                                         (zone, dnskey.algstr(algnum), str(e)))
