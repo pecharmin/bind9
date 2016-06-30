@@ -1,18 +1,9 @@
 /*
- * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")
- * Copyright (C) 2000-2002  Internet Software Consortium.
+ * Copyright (C) 2000-2002, 2004-2016  Internet Systems Consortium, Inc. ("ISC")
  *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH
- * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
- * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,
- * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
- * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
- * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 /* $Id$ */
@@ -216,7 +207,7 @@ void
 dns_requestmgr_whenshutdown(dns_requestmgr_t *requestmgr, isc_task_t *task,
 			    isc_event_t **eventp)
 {
-	isc_task_t *clone;
+	isc_task_t *tclone;
 	isc_event_t *event;
 
 	req_log(ISC_LOG_DEBUG(3), "dns_requestmgr_whenshutdown");
@@ -236,9 +227,9 @@ dns_requestmgr_whenshutdown(dns_requestmgr_t *requestmgr, isc_task_t *task,
 		event->ev_sender = requestmgr;
 		isc_task_send(task, &event);
 	} else {
-		clone = NULL;
-		isc_task_attach(task, &clone);
-		event->ev_sender = clone;
+		tclone = NULL;
+		isc_task_attach(task, &tclone);
+		event->ev_sender = tclone;
 		ISC_LIST_APPEND(requestmgr->whenshutdown, event, ev_link);
 	}
 	UNLOCK(&requestmgr->lock);

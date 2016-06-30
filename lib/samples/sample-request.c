@@ -1,17 +1,9 @@
 /*
- * Copyright (C) 2009, 2012-2015  Internet Systems Consortium, Inc. ("ISC")
+ * Copyright (C) 2009, 2012-2016  Internet Systems Consortium, Inc. ("ISC")
  *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH
- * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
- * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,
- * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
- * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
- * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 /* $Id: sample-request.c,v 1.5 2009/09/29 15:06:07 fdupont Exp $ */
@@ -147,7 +139,7 @@ print_section(dns_message_t *message, int section, isc_buffer_t *buf) {
 
 int
 main(int argc, char *argv[]) {
-	int ch, i, gai_error;
+	int ch, i, gaierror;
 	struct addrinfo hints, *res;
 	isc_textregion_t tr;
 	dns_client_t *client = NULL;
@@ -221,10 +213,10 @@ main(int argc, char *argv[]) {
 #ifdef AI_NUMERICHOST
 	hints.ai_flags = AI_NUMERICHOST;
 #endif
-	gai_error = getaddrinfo(argv[0], "53", &hints, &res);
-	if (gai_error != 0) {
+	gaierror = getaddrinfo(argv[0], "53", &hints, &res);
+	if (gaierror != 0) {
 		fprintf(stderr, "getaddrinfo failed: %s\n",
-			gai_strerror(gai_error));
+			gai_strerror(gaierror));
 		exit(1);
 	}
 	INSIST(res->ai_addrlen <= sizeof(sa.type));

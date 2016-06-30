@@ -1,17 +1,9 @@
 /*
- * Copyright (C) 2009, 2010, 2012-2015  Internet Systems Consortium, Inc. ("ISC")
+ * Copyright (C) 2009, 2010, 2012-2016  Internet Systems Consortium, Inc. ("ISC")
  *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH
- * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
- * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,
- * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
- * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
- * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 /* $Id: sample-update.c,v 1.10 2010/12/09 00:54:34 marka Exp $ */
@@ -92,7 +84,7 @@ int
 main(int argc, char *argv[]) {
 	int ch;
 	struct addrinfo hints, *res;
-	int gai_error;
+	int gaierror;
 	dns_client_t *client = NULL;
 	char *zonenamestr = NULL;
 	char *keyfilename = NULL;
@@ -189,10 +181,10 @@ main(int argc, char *argv[]) {
 #ifdef AI_NUMERICHOST
 		hints.ai_flags = AI_NUMERICHOST;
 #endif
-		gai_error = getaddrinfo(auth_server, "53", &hints, &res);
-		if (gai_error != 0) {
+		gaierror = getaddrinfo(auth_server, "53", &hints, &res);
+		if (gaierror != 0) {
 			fprintf(stderr, "getaddrinfo failed: %s\n",
-				gai_strerror(gai_error));
+				gai_strerror(gaierror));
 			exit(1);
 		}
 		INSIST(res->ai_addrlen <= sizeof(sa_auth.type));
@@ -213,10 +205,10 @@ main(int argc, char *argv[]) {
 #ifdef AI_NUMERICHOST
 		hints.ai_flags = AI_NUMERICHOST;
 #endif
-		gai_error = getaddrinfo(recursive_server, "53", &hints, &res);
-		if (gai_error != 0) {
+		gaierror = getaddrinfo(recursive_server, "53", &hints, &res);
+		if (gaierror != 0) {
 			fprintf(stderr, "getaddrinfo failed: %s\n",
-				gai_strerror(gai_error));
+				gai_strerror(gaierror));
 			exit(1);
 		}
 		INSIST(res->ai_addrlen <= sizeof(sa_recursive.type));

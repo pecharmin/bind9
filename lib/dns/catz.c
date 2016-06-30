@@ -1,17 +1,9 @@
 /*
  * Copyright (C) 2016  Internet Systems Consortium, Inc. ("ISC")
  *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH
- * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
- * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,
- * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
- * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
- * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 /*! \file */
@@ -1041,7 +1033,7 @@ catz_process_masters(dns_catz_zone_t *zone, dns_ipkeylist_t *ipkl,
 		 * no optimization.
 		 */
 		for (i = 0; i < ipkl->count; i++) {
-			if (ipkl->labels != NULL &&
+			if (ipkl->labels[i] != NULL &&
 			    !dns_name_compare(name, ipkl->labels[i]))
 				break;
 		}
@@ -1060,7 +1052,7 @@ catz_process_masters(dns_catz_zone_t *zone, dns_ipkeylist_t *ipkl,
 			}
 
 			ipkl->labels[i] = isc_mem_get(mctx, sizeof(dns_name_t));
-			if (ipkl->labels == NULL)  {
+			if (ipkl->labels[i] == NULL)  {
 				if (keyname != NULL) {
 					dns_name_free(keyname, mctx);
 					isc_mem_put(mctx, keyname,

@@ -1,18 +1,9 @@
 /*
- * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")
- * Copyright (C) 1999-2003  Internet Software Consortium.
+ * Copyright (C) 1999-2016  Internet Systems Consortium, Inc. ("ISC")
  *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH
- * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
- * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,
- * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
- * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
- * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 /*! \file
@@ -2850,7 +2841,7 @@ dns_adb_detach(dns_adb_t **adbx) {
 
 void
 dns_adb_whenshutdown(dns_adb_t *adb, isc_task_t *task, isc_event_t **eventp) {
-	isc_task_t *clone;
+	isc_task_t *tclone;
 	isc_event_t *event;
 	isc_boolean_t zeroirefcnt = ISC_FALSE;
 
@@ -2877,9 +2868,9 @@ dns_adb_whenshutdown(dns_adb_t *adb, isc_task_t *task, isc_event_t **eventp) {
 		event->ev_sender = adb;
 		isc_task_send(task, &event);
 	} else {
-		clone = NULL;
-		isc_task_attach(task, &clone);
-		event->ev_sender = clone;
+		tclone = NULL;
+		isc_task_attach(task, &tclone);
+		event->ev_sender = tclone;
 		ISC_LIST_APPEND(adb->whenshutdown, event, ev_link);
 	}
 

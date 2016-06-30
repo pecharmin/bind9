@@ -1,3 +1,20 @@
+4403.	[bug]		Rename variables and arguments that shadow: basename,
+			clone and gai_error.
+
+4402.	[bug]		protoc-c is now a hard requirement for --enable-dnstap.
+
+4401.	[misc]		Change LICENSE to MPL 2.0.
+
+4400.	[bug]		ttl policy was not being inherited in policy.py.
+			[RT #42718]
+
+4399.	[bug]		policy.py 'ECCGOST', 'ECDSAP256SHA256', and
+			'ECDSAP384SHA384' don't have settable keysize.
+			[RT #42718]
+
+4398.	[bug]		Correct spelling of ECDSAP256SHA256 in policy.py.
+			[RT #42718]
+
 4397.	[bug]		Update Windows python support. [RT #42538]
 
 4396.	[func]		dnssec-keymgr now takes a '-r randomfile' option.
@@ -7,7 +24,7 @@
 			[RT #42586]
 
 4394.	[func]		Add rndc command "dnstap-reopen" to close and
-			reopen dnstap output filed. [RT #41803]
+			reopen dnstap output files. [RT #41803]
 
 4393.	[bug]		Address potential NULL pointer dereferences in
 			dnstap code.

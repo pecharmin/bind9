@@ -1,18 +1,9 @@
 /*
- * Copyright (C) 2004-2016  Internet Systems Consortium, Inc. ("ISC")
- * Copyright (C) 1999-2003  Internet Software Consortium.
+ * Copyright (C) 1999-2016  Internet Systems Consortium, Inc. ("ISC")
  *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH
- * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
- * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,
- * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
- * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
- * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 /*! \file */
@@ -4147,7 +4138,7 @@ fctx_join(fetchctx_t *fctx, isc_task_t *task, isc_sockaddr_t *client,
 	  dns_rdataset_t *rdataset, dns_rdataset_t *sigrdataset,
 	  dns_fetch_t *fetch)
 {
-	isc_task_t *clone;
+	isc_task_t *tclone;
 	dns_fetchevent_t *event;
 
 	FCTXTRACE("join");
@@ -4157,13 +4148,13 @@ fctx_join(fetchctx_t *fctx, isc_task_t *task, isc_sockaddr_t *client,
 	 * sender field.  We'll make the fetch the sender when we actually
 	 * send the event.
 	 */
-	clone = NULL;
-	isc_task_attach(task, &clone);
+	tclone = NULL;
+	isc_task_attach(task, &tclone);
 	event = (dns_fetchevent_t *)
-		isc_event_allocate(fctx->res->mctx, clone, DNS_EVENT_FETCHDONE,
+		isc_event_allocate(fctx->res->mctx, tclone, DNS_EVENT_FETCHDONE,
 				   action, arg, sizeof(*event));
 	if (event == NULL) {
-		isc_task_detach(&clone);
+		isc_task_detach(&tclone);
 		return (ISC_R_NOMEMORY);
 	}
 	event->result = DNS_R_SERVFAIL;
@@ -9154,7 +9145,7 @@ void
 dns_resolver_whenshutdown(dns_resolver_t *res, isc_task_t *task,
 			  isc_event_t **eventp)
 {
-	isc_task_t *clone;
+	isc_task_t *tclone;
 	isc_event_t *event;
 
 	REQUIRE(VALID_RESOLVER(res));
@@ -9172,9 +9163,9 @@ dns_resolver_whenshutdown(dns_resolver_t *res, isc_task_t *task,
 		event->ev_sender = res;
 		isc_task_send(task, &event);
 	} else {
-		clone = NULL;
-		isc_task_attach(task, &clone);
-		event->ev_sender = clone;
+		tclone = NULL;
+		isc_task_attach(task, &tclone);
+		event->ev_sender = tclone;
 		ISC_LIST_APPEND(res->whenshutdown, event, ev_link);
 	}
 
