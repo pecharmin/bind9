@@ -359,12 +359,12 @@
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term><command>ds-update-bin</command></term>
+	<term><command>ds-publish-cmd</command></term>
 	<listitem>
 	  <para>
-            Path to an executable which triggers DS updates in parent zone.
-	    That binary takes DNSKEYs on STDIN for further processing.
-	    The binary's command argument is the zone origin.
+            Path to an executable which triggers DS update in parent zone.
+	    The binary is supplied with the zone's DNSKEYs on STDIN.
+            The zone origin name is appended to the defined command.
 	  </para>
 	</listitem>
       </varlistentry>

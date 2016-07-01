@@ -12,6 +12,8 @@ from .keydict import *
 from .keyevent import *
 from .policy import *
 import time
+from subprocess import Popen, PIPE
+from pprint import pprint
 
 
 class keyseries:
@@ -133,7 +135,7 @@ class keyseries:
 
         # last key? we already know we have sufficient coverage now, so
         # disable the inactivation of the final key (if it was set),
-        # ensuring that if dnssec-keymgr isn't run again, the last key
+        # ensuring that if dnssec-keymgr iswwt run again, the last key
         # in the series will at least remain usable.
         prev.setinactive(None, **kwargs)
         prev.setdelete(None, **kwargs)
@@ -144,6 +146,27 @@ class keyseries:
 
         return keys
 
+    def trigger_ds_update(self, zone, keys, policy, **kwargs):
+        ds_update_cmd = [policy.ds_publish_cmd, zone]
+
+        ds_update_input = ''
+        for k in keys:
+            k_flag = 256
+            if k.sep:
+                k_flag = 257
+            ds_update_input += "%s %i 3 %i %s ; %i\n" % \
+                               (k.fullname, k_flag, k.alg, \
+                                k.dnskey, \
+                                k.keyid)
+
+        try:
+            p = Popen(ds_update_cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate(input=ds_update_input)
+            if stderr:
+                raise Exception('unable to trigger DS update for zone %s: %s' % \
+                        (str(zone), str(stderr)))
+        except Exception as e:
+            raise Exception('unable to execute DS update: %s' % str(e))
 
     def enforce_policy(self, policies, now=time.time(), **kwargs):
         # If zones is provided as a parameter, use that list.
@@ -158,6 +181,7 @@ class keyseries:
             keys_dir = keys_dir or policy.directory or '.'
             alg = policy.algorithm
             algnum = dnskey.algnum(alg)
+
             if 'ksk' not in kwargs or not kwargs['ksk']:
                 if len(self._Z[zone][algnum]) == 0:
                     k = dnskey.generate(self._context['keygen_path'],
@@ -170,6 +194,7 @@ class keyseries:
                 collections.append(self._Z[zone])
 
             if 'zsk' not in kwargs or not kwargs['zsk']:
+                ksk_preroll = list(self._K[zone][algnum])
                 if len(self._K[zone][algnum]) == 0:
                     k = dnskey.generate(self._context['keygen_path'],
                                         self._context['randomdev'],
@@ -185,11 +210,15 @@ class keyseries:
                     if algorithm != algnum:
                         continue
                     try:
-                        if policy.ds_update_bin is not None:
-                            fixed_keys = self.fixseries(keys, policy,
-                                                        now, **kwargs)
-                            if set(keys) != set(fixed_keys):
-                                print("TODO: trigger DS update for %s" %zone)
+                        if policy.ds_publish_cmd is not None:
+                            k_series = self.fixseries(keys, policy,
+                                                      now, **kwargs)
+                            ksk_series = list()
+                            for k in k_series:
+                                if k.sep:
+                                    ksk_series.append(k)
+                            if set(ksk_preroll) != set(ksk_series):
+                                self.trigger_ds_update(zone, ksk_series, policy)
                         else:
                             self.fixseries(keys, policy, now, **kwargs)
 

@@ -65,6 +65,7 @@ class dnskey:
         self.alg = int(alg)
         self.keyid = int(keyid)
         self.fullname = fullname
+        self.dnskey = ''
 
         kfp = open(key_file, "r")
         for line in kfp:
@@ -85,6 +86,7 @@ class dnskey:
                 self.sep = True
             else:
                 self.sep = False
+            self.dnskey = ''.join(tokens[7:])
         kfp.close()
 
         pfp = open(private_file, "rU")
