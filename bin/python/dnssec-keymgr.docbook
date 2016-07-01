@@ -355,6 +355,9 @@
 	    as well as in policy classes or zone policies.  If no policy is
             configured, the default is one year for ZSK's. KSK's do not
             roll over by default.
+	    Note: dnssec-keygen enforces a rollover interval of at least
+	    30 days cause the pre-publication interval defaults to 30 days
+	    when generation successor keys.
 	  </para>
 	</listitem>
       </varlistentry>
