@@ -13,7 +13,6 @@ from .keyevent import *
 from .policy import *
 import time
 from subprocess import Popen, PIPE
-from pprint import pprint
 
 
 class keyseries:
