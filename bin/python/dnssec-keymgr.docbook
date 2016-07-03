@@ -366,10 +366,10 @@
 	<listitem>
 	  <para>
             Defines an external command to trigger DS update in parent zone.
-	    The command is executed every time a zone's DNSKEY set changes.
+	    The command is executed every time a zone's DNSKEY KSK set changes.
             The zone origin name is appended to the command line.
 	    dnssec-keymgr supplies the binary on STDIN with the zone's DNSKEY
-	    records including the key IDs as comment at end of line.
+	    KSK records including the key IDs as comment at end of line.
 	  </para>
 	</listitem>
       </varlistentry>
