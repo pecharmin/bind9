@@ -158,11 +158,13 @@ class keyseries:
                                 k_flag, k.alg, k.dnskey, k.keyid)
 
         try:
+            print("# %s" % ' '.join(ds_update_cmd))
             p = Popen(ds_update_cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
             stdout, stderr = p.communicate(input=ds_update_input)
             if stderr:
                 raise Exception('unable to trigger DS update for zone %s: %s' % \
                         (str(zone), str(stderr)))
+            print(stdout)
         except Exception as e:
             raise Exception('unable to execute DS update: %s' % str(e))
 
