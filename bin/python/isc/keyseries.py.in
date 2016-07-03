@@ -153,10 +153,9 @@ class keyseries:
             k_flag = 256
             if k.sep:
                 k_flag = 257
-            ds_update_input += "%s %i 3 %i %s ; %i\n" % \
-                               (k.fullname, k_flag, k.alg, \
-                                k.dnskey, \
-                                k.keyid)
+            ds_update_input += "%s %i %s DNSKEY %i 3 %i %s ; %i\n" % \
+                               (k.fullname, k.ttl, k.cls, \
+                                k_flag, k.alg, k.dnskey, k.keyid)
 
         try:
             p = Popen(ds_update_cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)

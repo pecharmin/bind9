@@ -365,9 +365,11 @@
 	<term><command>ds-publish-cmd</command></term>
 	<listitem>
 	  <para>
-            Path to an executable which triggers DS update in parent zone.
-	    The binary is supplied with the zone's DNSKEYs on STDIN.
-            The zone origin name is appended to the defined command.
+            Defines an external command to trigger DS update in parent zone.
+	    The command is executed every time a zone's DNSKEY set changes.
+            The zone origin name is appended to the command line.
+	    dnssec-keymgr supplies the binary on STDIN with the zone's DNSKEY
+	    records including the key IDs as comment at end of line.
 	  </para>
 	</listitem>
       </varlistentry>

@@ -62,6 +62,7 @@ class dnskey:
         self.keystr = keystr
 
         self.name = name
+        self.cls = 'IN'
         self.alg = int(alg)
         self.keyid = int(keyid)
         self.fullname = fullname
@@ -78,6 +79,7 @@ class dnskey:
             if tokens[1].lower() in ('in', 'ch', 'hs'):
                 septoken = 3
                 self.ttl = keyttl
+                self.cls = tokens[1].upper()
             else:
                 septoken = 4
                 self.ttl = int(tokens[1]) if not keyttl else keyttl
