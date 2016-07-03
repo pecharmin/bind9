@@ -134,7 +134,7 @@ class keyseries:
 
         # last key? we already know we have sufficient coverage now, so
         # disable the inactivation of the final key (if it was set),
-        # ensuring that if dnssec-keymgr iswwt run again, the last key
+        # ensuring that if dnssec-keymgr isn't run again, the last key
         # in the series will at least remain usable.
         prev.setinactive(None, **kwargs)
         prev.setdelete(None, **kwargs)
