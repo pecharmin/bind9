@@ -66,6 +66,7 @@ class dnskey:
         self.alg = int(alg)
         self.keyid = int(keyid)
         self.fullname = fullname
+        self.flags = 256
         self.dnskey = ''
 
         kfp = open(key_file, "r")
