@@ -150,12 +150,9 @@ class keyseries:
 
         ds_update_input = ''
         for k in keys:
-            k_flag = 256
-            if k.sep:
-                k_flag = 257
             ds_update_input += "%s %i %s DNSKEY %i 3 %i %s ; %i\n" % \
                                (k.fullname, k.ttl, k.cls, \
-                                k_flag, k.alg, k.dnskey, k.keyid)
+                                k.flags, k.alg, k.dnskey, k.keyid)
 
         try:
             print("# %s" % ' '.join(ds_update_cmd))
