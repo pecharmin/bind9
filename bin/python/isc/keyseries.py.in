@@ -150,9 +150,10 @@ class keyseries:
 
         ds_update_input = ''
         for k in keys:
-            ds_update_input += "%s %i %s DNSKEY %i 3 %i %s ; %i\n" % \
-                               (k.fullname, k.ttl, k.cls, \
-                                k.flags, k.alg, k.dnskey, k.keyid)
+            if k.check_prepub() and not k.check_postpub():
+                ds_update_input += "%s %i %s DNSKEY %i 3 %i %s ; %i\n" % \
+                                   (k.fullname, k.ttl, k.cls, \
+                                    k.flags, k.alg, k.dnskey, k.keyid)
 
         try:
             print("# %s" % ' '.join(ds_update_cmd))
