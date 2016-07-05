@@ -146,7 +146,9 @@ class keyseries:
         return keys
 
     def trigger_ds_update(self, zone, keys, policy, **kwargs):
-        ds_update_cmd = [policy.ds_publish_cmd, zone]
+        ds_update_cmd = policy.ds_publish_cmd.split(' ')
+        ds_update_cmd += [zone]
+        ds_update_cmd = filter(None, ds_update_cmd)
 
         ds_update_input = ''
         for k in keys:
