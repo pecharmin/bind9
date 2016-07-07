@@ -370,6 +370,8 @@
             The zone origin name is appended to the command.
 	    dnssec-keymgr supplies the command on STDIN with the zone's DNSKEY
 	    KSK records including the key IDs as comment at the end of line.
+	    dnssec-keymgr identifies a fatal DS update if the command writes
+	    out something on STDERR. The command'S exit code is not checked.
 	  </para>
 	</listitem>
       </varlistentry>
