@@ -357,7 +357,7 @@
             roll over by default.
 	    Note: dnssec-keygen enforces a rollover interval of at least
 	    30 days cause the pre-publication interval defaults to 30 days
-	    when generation successor keys.
+	    when generating successor keys.
 	  </para>
 	</listitem>
       </varlistentry>
