@@ -1,7 +1,16 @@
+4405.	[bug]		Change 4342 introduced a regression where you could
+			not remove a delegation in a NSEC3 signed zone using
+			OPTOUT via nsupdate. [RT #42702]
+
+4404.	[misc]		Allow krb5-config to be used when configuring gssapi.
+			[RT #42580]
+
 4403.	[bug]		Rename variables and arguments that shadow: basename,
 			clone and gai_error.
 
 4402.	[bug]		protoc-c is now a hard requirement for --enable-dnstap.
+
+	--- 9.11.0b1 released ---
 
 4401.	[misc]		Change LICENSE to MPL 2.0.
 
