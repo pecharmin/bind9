@@ -182,6 +182,7 @@ class keyseries:
             keys_dir = keys_dir or policy.directory or '.'
             alg = policy.algorithm
             algnum = dnskey.algnum(alg)
+            ksk_preroll = list()
 
             if 'ksk' not in kwargs or not kwargs['ksk']:
                 if len(self._Z[zone][algnum]) == 0:
@@ -195,7 +196,9 @@ class keyseries:
                 collections.append(self._Z[zone])
 
             if 'zsk' not in kwargs or not kwargs['zsk']:
-                ksk_preroll = list(self._K[zone][algnum])
+                if policy.ds_publish_cmd is not None:
+                    ksk_preroll = list(self._K[zone][algnum])
+
                 if len(self._K[zone][algnum]) == 0:
                     k = dnskey.generate(self._context['keygen_path'],
                                         self._context['randomdev'],
