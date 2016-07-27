@@ -1,3 +1,87 @@
+4426.	[bug]		Addressed Coverity warnings. [RT #42908]
+
+4425.	[bug]		arpaname, dnstap-read and named-rrchecker were not
+			being installed into ${prefix}/bin.  Tidy up
+			installation issues with CHANGE 4421. [RT #42910]
+
+4424.	[experimental]	Named now sends _ta-XXXX.<trust-anchor>/NULL queries
+			to provide feedback to the trust-anchor administrators
+			about how key rollovers are progressing as per
+			draft-ietf-dnsop-edns-key-tag-02.  This can be
+			disabled using 'trust-anchor-telemetry no;'.
+			[RT #40583]
+
+4423.	[maint]		Added missing IPv6 address 2001:500:84::b for
+			B.ROOT-SERVERS.NET. [RT #42898]
+
+4422.	[port]		Silence clang warnings in dig.c and dighost.c.
+			[RT #42451]
+
+4421.	[func]		When built with LMDB (Lightning Memory-mapped
+			Database), named will now use a database to store
+			the configuration for zones added by "rndc addzone"
+			instead of using a flat NZF file. This improves
+			performance of "rndc delzone" and "rndc modzone"
+			significantly. Existing NZF files will
+			automatically by converted to NZD databases.
+			To view the contents of an NZD or to roll back to
+			NZF format, use "named-nzd2nzf". To disable
+			this feature, use "configure --without-lmdb".
+			[RT #39837]
+
+4420.	[func]		nslookup now looks for AAAA as well as A by default.
+			[RT #40420]
+
+4419.	[bug]		Don't cause undefined result if the label of an
+			entry in catalog zone is changed. [RT #42708]
+
+4418.	[bug]		Fix a compiler warning in GSSAPI code. [RT #42879]
+
+4417.	[bug]		dnssec-keymgr could fail to create successor keys
+			if the prepublication interval was set to a value
+			smaller than the default. [RT #42820]
+
+4416.	[bug]		dnssec-keymgr: Domain names in policy files could
+			fail to match due to trailing dots. [RT #42807]
+
+4415.	[bug]		dnssec-keymgr: Expired/deleted keys were not always
+			excluded. [RT #42884]
+
+4414.	[bug]		Corrected a bug in the MIPS implementation of
+			isc_atomic_xadd(). [RT #41965]
+
+4413.	[bug]		GSSAPI negotiation could fail if GSS_S_CONTINUE_NEEDED
+			was returned. [RT #42733]
+
+	--- 9.11.0b2 released ---
+
+4412.	[cleanup]	Make fixes for GCC 6. ISC_OFFSET_MAXIMUM macro was
+			removed. [RT #42721]
+
+4411.	[func]		"rndc dnstap -roll" automatically rolls the
+			dnstap output file; the previous version is
+			saved with ".0" suffix, and earlier versions
+			with ".1" and so on. An optional numeric argument
+			indicates how many prior files to save. [RT #42830]
+
+4410.	[bug]		Address use after free and memory leak with dnstap.
+			[RT #42746]
+
+4409.	[bug]		DNS64 should exclude mapped addresses by default when
+			an exclude acl is not defined. [RT #42810]
+
+4408.	[func]		Continue waiting for expected response when we the
+			response we get does not match the request. [RT #41026]
+
+4407.	[performance]	Use GCC builtin for clz in RPZ lookup code.
+			[RT #42818]
+
+4406.	[security]	getrrsetbyname with a non absolute name could
+			trigger an infinite recursion bug in lwresd
+			and named with lwres configured if when combined
+			with a search list entry the resulting name is
+			too long. (CVE-2016-2775) [RT #42694]
+
 4405.	[bug]		Change 4342 introduced a regression where you could
 			not remove a delegation in a NSEC3 signed zone using
 			OPTOUT via nsupdate. [RT #42702]

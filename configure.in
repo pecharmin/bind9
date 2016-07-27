@@ -4,20 +4,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-# Copyright (C) 1998-2003  Internet Software Consortium.
-#
-# Permission to use, copy, modify, and/or distribute this software for any
-# purpose with or without fee is hereby granted, provided that the above
-# copyright notice and this permission notice appear in all copies.
-#
-# THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH
-# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-# AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,
-# INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-# LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
-# OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-# PERFORMANCE OF THIS SOFTWARE.
-
 dnl
 AC_DIVERT_PUSH(1)dnl
 esyscmd([sed -e 's/^/# /' -e '/Portions of this code/,$d' COPYRIGHT])dnl
@@ -2160,6 +2146,73 @@ if test "$have_clock_gt" = "rt"; then
 fi
 
 #
+# was --with-lmdb specified?
+#
+AC_MSG_CHECKING(for lmdb library)
+AC_ARG_WITH(lmdb,
+[  --with-lmdb[=PATH]        build with LMDB library [yes|no|path]],
+    use_lmdb="$withval", use_lmdb="auto")
+
+have_lmdb=""
+case "$use_lmdb" in
+	no)
+		lmdb_libs=""
+		;;
+	auto|yes)
+		for d in /usr /usr/local /opt/local
+		do
+			if test -f "${d}/include/lmdb.h"
+			then
+				if test ${d} != /usr
+				then
+					lmdb_cflags="-I ${d}/include"
+					LIBS="$LIBS -L${d}/lib"
+				fi
+				have_lmdb="yes"
+			fi
+		done
+		;;
+	*)
+		if test -f "${use_lmdb}/include/lmdb.h"
+		then
+			lmdb_cflags="-I${use_lmdb}/include"
+			LIBS="$LIBS -L${use_lmdb}/lib"
+			have_lmdb="yes"
+		else
+			AC_MSG_ERROR([$use_lmdb/include/lmdb.h not found.])
+		fi
+		;;
+esac
+
+if test "X${have_lmdb}" != "X"
+then
+	AC_MSG_RESULT(yes)
+	AC_SEARCH_LIBS([mdb_env_create], [lmdb], [],
+		       [AC_MSG_ERROR([found lmdb include but not library.])
+			have_lmdb=""])
+elif test "X$use_lmdb" = Xyes
+then
+	AC_MSG_ERROR([include/lmdb.h not found.])
+else
+	AC_MSG_RESULT(no)
+fi
+
+NZD_TOOLS=""
+NZDSRCS=
+NZDTARGETS=
+if test "X${have_lmdb}" != "X"
+then
+	CFLAGS="$CFLAGS $lmdb_cflags"
+	AC_DEFINE(HAVE_LMDB, 1, [Define if lmdb was found])
+	NZD_TOOLS="nzd"
+        NZDSRCS='${NZDSRCS}'
+        NZDTARGETS='${NZDTARGETS}'
+fi
+AC_SUBST(NZD_TOOLS)
+AC_SUBST(NZDSRCS)
+AC_SUBST(NZDTARGETS)
+
+#
 # was --with-libxml2 specified?
 #
 AC_MSG_CHECKING(for libxml2 library)
@@ -4008,6 +4061,23 @@ if test "$have_builtin_expect" = "yes"; then
 fi
 
 #
+# Check for __builtin_clz
+#
+AC_MSG_CHECKING([compiler support for __builtin_clz])
+AC_TRY_LINK(, [
+        return (__builtin_clz(0xff) == 24 ? 1 : 0);
+], [
+        have_builtin_clz=yes
+        AC_MSG_RESULT(yes)
+], [
+        have_builtin_clz=no
+        AC_MSG_RESULT(no)
+])
+if test "$have_builtin_clz" = "yes"; then
+        AC_DEFINE(HAVE_BUILTIN_CLZ, 1, [Define to 1 if the compiler supports __builtin_clz.])
+fi
+
+#
 # CPU relax (for spin locks)
 #
 if $use_threads
@@ -4143,8 +4213,6 @@ DNSTAP=
 DNSTAPSRCS=
 DNSTAPOBJS=
 DNSTAPTARGETS=
-DNSTAPMAN=
-DNSTAPHTML=
 DNSTAP_PB_C_H=
 if test "x$use_dnstap" != "xno"; then
 	if ! $use_threads; then
@@ -4196,16 +4264,12 @@ if test "x$use_dnstap" != "xno"; then
 	DNSTAPSRCS='${DNSTAPSRCS}'
 	DNSTAPOBJS='${DNSTAPOBJS}'
 	DNSTAPTARGETS='${DNSTAPTARGETS}'
-	DNSTAPMAN='${DNSTAPMAN}'
-	DNSTAPHTML='${DNSTAPHTML}'
 	DNSTAP_PB_C_H="dnstap.pb-c.h"
 fi
 AC_SUBST(DNSTAP)
 AC_SUBST(DNSTAPSRCS)
 AC_SUBST(DNSTAPOBJS)
 AC_SUBST(DNSTAPTARGETS)
-AC_SUBST(DNSTAPMAN)
-AC_SUBST(DNSTAPHTML)
 AC_SUBST(DNSTAP_PB_C_H)
 
 #
@@ -5117,9 +5181,9 @@ esac
 AC_ARG_ENABLE(full-report,
 	[  --enable-full-report	  report values of all configure options])
 
-echo "========================================================================"
+echo "==============================================================================="
 echo "Configuration summary:"
-echo "------------------------------------------------------------------------"
+echo "-------------------------------------------------------------------------------"
 echo "Optional features enabled:"
 if $use_threads; then
     echo "    Multiprocessing support (--enable-threads)"
@@ -5146,6 +5210,7 @@ if test "$enable_full_report" = "yes"; then
     test "X$XMLSTATS" = "X" || echo "    XML statistics (--with-libxml2)"
     test "X$JSONSTATS" = "X" || echo "    JSON statistics (--with-libjson)"
     test "X$ZLIB" = "X" || echo "    HTTP zlib compression (--with-zlib)"
+    test "X$NZD_TOOLS" = "X" || echo "    LMDB database to store configuration for 'addzone' zones (--with-lmdb)"
 fi
 
 if test "$use_pkcs11" != "no"; then
@@ -5237,6 +5302,7 @@ test "X$PYTHON" = "X" && echo "    Python tools (--with-python)"
 test "X$XMLSTATS" = "X" && echo "    XML statistics (--with-libxml2)"
 test "X$JSONSTATS" = "X" && echo "    JSON statistics (--with-libjson)"
 test "X$ZLIB" = "X" && echo "    HTTP zlib compression (--with-zlib)"
+test "X$NZD_TOOLS" = "X" && echo "    LMDB database to store configuration for 'addzone' zones (--with-lmdb)"
 
 if test "X$ac_unrecognized_opts" != "X"; then
     echo
@@ -5244,10 +5310,10 @@ if test "X$ac_unrecognized_opts" != "X"; then
     echo "    $ac_unrecognized_opts"
 fi
 if test "$enable_full_report" != "yes"; then
-    echo "------------------------------------------------------------------------"
+    echo "-------------------------------------------------------------------------------"
     echo "For more detail, use --enable-full-report."
 fi
-echo "========================================================================"
+echo "==============================================================================="
 
 if test "X$CRYPTO" = "X"; then
 cat << \EOF                                                             

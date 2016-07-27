@@ -176,6 +176,7 @@ EXTERN isc_boolean_t		ns_g_nonearest		INIT(ISC_FALSE);
 EXTERN isc_boolean_t		ns_g_notcp		INIT(ISC_FALSE);
 EXTERN isc_boolean_t		ns_g_disable6		INIT(ISC_FALSE);
 EXTERN isc_boolean_t		ns_g_disable4		INIT(ISC_FALSE);
+EXTERN unsigned int		ns_g_tat_interval	INIT(24*3600);
 
 #ifdef HAVE_GEOIP
 EXTERN dns_geoip_databases_t	*ns_g_geoip		INIT(NULL);
@@ -183,6 +184,8 @@ EXTERN dns_geoip_databases_t	*ns_g_geoip		INIT(NULL);
 
 EXTERN const char *		ns_g_fuzz_named_addr	INIT(NULL);
 EXTERN ns_fuzz_t		ns_g_fuzz_type		INIT(ns_fuzz_none);
+
+EXTERN dns_acl_t *		ns_g_mapped		INIT(NULL);
 
 #undef EXTERN
 #undef INIT

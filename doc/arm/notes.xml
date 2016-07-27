@@ -68,7 +68,11 @@
     <itemizedlist>
       <listitem>
 	<para>
-	  None.
+	 getrrsetbyname with a non absolute name could trigger an
+	 infinite recursion bug in lwresd and named with lwres
+	 configured if when combined with a search list entry the
+	 resulting name is too long.  This flaw is disclosed in
+	 CVE-2016-2775. [RT #42694]
 	</para>
       </listitem>
     </itemizedlist>
@@ -98,20 +102,21 @@
 	  mechanism.
 	</para>
 	<para>
-      This feature should be considered experimental. It currently
+	  This feature should be considered experimental. It currently
 	  supports only basic features; more advanced features such as
 	  ACLs and TSIG keys are not yet supported. Example catalog
 	  zone configurations can be found in the Chapter 9 of the
 	  BIND Administrator Reference Manual.
 	</para>
-		<para>
+	<para>
 	  Support for master entries with TSIG keys has been added to catalog
 	  zones, as well as support for allow-query and allow-transfer.
-		</para>
+	</para>
       </listitem>
       <listitem>
 	<para>
-	  Added rndc python module.
+	  Added an <command>isc.rndc</command> Python module, which allows
+	  <command>rndc</command> commands to be sent from Python programs.
 	</para>
       </listitem>
       <listitem>
@@ -192,8 +197,19 @@
 	  a human-readable format.
 	</para>
 	<para>
-	  <command>rndc dnstap-reopen</command> can be used reopen
-	  dnstap output files after renaming them.
+	  <command>rndc dnstap -roll</command> causes <command>dnstap</command>
+	  output files to be rolled like log files -- the most recent output
+	  file is renamed with a <filename>.0</filename> suffix, the next
+	  most recent with <filename>.1</filename>, etc. (Note that this
+	  only works when <command>dnstap</command> output is being written
+	  to a file, not to a UNIX domain socket.) An optional numerical
+	  argument specifies how many backup log files to retain; if not
+	  specified or set to 0, there is no limit.
+	</para>
+	<para>
+	  <command>rndc dnstap -reopen</command> simply closes and reopens
+	  the <command>dnstap</command> output channel without renaming
+	  the output file.
 	</para>
 	<para>
 	  For more information on <command>dnstap</command>, see
@@ -366,6 +382,12 @@
       </listitem>
       <listitem>
 	<para>
+	  <command>nslookup</command> will now look up IPv6 as well
+	  as IPv4 addresses by default. [RT #40420]
+	</para>
+      </listitem>
+      <listitem>
+	<para>
 	  <option>serial-update-method</option> can now be set to
 	  <literal>date</literal>. On update, the serial number will
 	  be set to the current date in YYYYMMDDNN format.
@@ -452,6 +474,32 @@
 	<para>
 	  <command>rndc showzone</command> displays the current
 	  configuration for a specified zone.
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  When BIND is built with the <command>lmdb</command> library
+	  (Lightning Memory-Mapped Database), <command>named</command>
+	  will store the configuration information for zones
+	  that are added via <command>rndc addzone</command>
+	  in a database, rather than in a flat "NZF" file.  This
+	  dramatically improves performance for
+	  <command>rndc delzone</command> and
+	  <command>rndc modzone</command>: deleting or changing
+	  the contents of a database is much faster than rewriting
+	  a text file.
+	</para>
+	<para>
+	  On startup, if <command>named</command> finds an existing
+	  NZF file, it will automatically convert it to the new NZD
+	  database format.
+	</para>
+	<para>
+	  To view the contents of an NZD, or to convert an
+	  NZD back to an NZF file (for example, to revert back
+	  to an earlier version of BIND which did not support the
+	  NZD format), use the new command <command>named-nzd2nzf</command>
+	  [RT #39837]
 	</para>
       </listitem>
       <listitem>
@@ -559,6 +607,19 @@
 	  a single arbitrarily-selected RRset that matches the query
 	  name rather than returning all of the matching RRsets.
 	  Thanks to Tony Finch for the contribution. [RT #41615]
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  <command>named</command> now provides feedback to the
+	  owners of zones which have trust anchors configured
+	  (<command>trusted-keys</command>,
+	  <command>managed-keys</command>, <command>dnssec-validation
+	  auto;</command> and <command>dnssec-lookaside auto;</command>)
+	  by sending a daily query which encodes the keyids of the
+	  configured trust anchors for the zone.  This is controlled
+	  by <command>trust-anchor-telemetry</command> and defaults
+	  to yes.
 	</para>
       </listitem>
     </itemizedlist>

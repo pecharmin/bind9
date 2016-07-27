@@ -122,6 +122,7 @@ struct dns_view {
 	isc_boolean_t			enablevalidation;
 	isc_boolean_t			acceptexpired;
 	isc_boolean_t			requireservercookie;
+	isc_boolean_t			trust_anchor_telemetry;
 	dns_transfer_format_t		transfer_format;
 	dns_acl_t *			cacheacl;
 	dns_acl_t *			cacheonacl;
@@ -197,8 +198,8 @@ struct dns_view {
 	dns_zone_t *			managed_keys;
 	dns_zone_t *			redirect;
 	dns_name_t *			redirectzone;	/* points to
-							   redirectfixed
-							   when valid */
+							 * redirectfixed
+							 * when valid */
 	dns_fixedname_t 		redirectfixed;
 
 	/*
@@ -209,8 +210,11 @@ struct dns_view {
 	 * named implements.
 	 */
 	char *				new_zone_file;
+	char *			        new_zone_db;
+	void *				new_zone_dbenv;
 	void *				new_zone_config;
 	void				(*cfg_destroy)(void **);
+	isc_mutex_t			new_zone_lock;
 
 	unsigned char			secret[32];	/* Client secret */
 	unsigned int			v6bias;
@@ -1206,7 +1210,7 @@ dns_view_untrust(dns_view_t *view, dns_name_t *keyname,
  * \li	'dnskey' is valid.
  */
 
-void
+isc_result_t
 dns_view_setnewzones(dns_view_t *view, isc_boolean_t allow, void *cfgctx,
 		     void (*cfg_destroy)(void **));
 /*%<
@@ -1225,6 +1229,10 @@ dns_view_setnewzones(dns_view_t *view, isc_boolean_t allow, void *cfgctx,
  *
  * Requires:
  * \li 'view' is valid.
+ *
+ * Returns:
+ * \li ISC_R_SUCCESS
+ * \li ISC_R_NOSPACE
  */
 
 void

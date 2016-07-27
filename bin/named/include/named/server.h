@@ -27,6 +27,7 @@
 #define NS_EVENTCLASS		ISC_EVENTCLASS(0x4E43)
 #define NS_EVENT_RELOAD		(NS_EVENTCLASS + 0)
 #define NS_EVENT_CLIENTCONTROL	(NS_EVENTCLASS + 1)
+#define NS_EVENT_DELZONE	(NS_EVENTCLASS + 2)
 
 /*%
  * Name server state.  Better here than in lots of separate global variables.
@@ -75,6 +76,7 @@ struct ns_server {
 	isc_timer_t *		interface_timer;
 	isc_timer_t *		heartbeat_timer;
 	isc_timer_t *		pps_timer;
+	isc_timer_t *		tat_timer;
 
 	isc_uint32_t		interface_interval;
 	isc_uint32_t		heartbeat_interval;
@@ -740,6 +742,6 @@ ns_server_mkeys(ns_server_t *server, isc_lex_t *lex, isc_buffer_t **text);
  * Close and reopen DNSTAP output file.
  */
 isc_result_t
-ns_server_dnstap_reopen(ns_server_t *server);
+ns_server_dnstap(ns_server_t *server, isc_lex_t *lex, isc_buffer_t **text);
 
 #endif /* NAMED_SERVER_H */

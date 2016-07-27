@@ -11,6 +11,10 @@
   <info>
     <title>BIND 9 Administrator Reference Manual</title>
     <copyright>
+      <year>2000</year>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
       <year>2004</year>
       <year>2005</year>
       <year>2006</year>
@@ -24,13 +28,6 @@
       <year>2014</year>
       <year>2015</year>
       <holder>Internet Systems Consortium, Inc. ("ISC")</holder>
-    </copyright>
-    <copyright>
-      <year>2000</year>
-      <year>2001</year>
-      <year>2002</year>
-      <year>2003</year>
-      <holder>Internet Software Consortium.</holder>
     </copyright>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="releaseinfo.xml"/>
   </info>
@@ -5513,7 +5510,7 @@ options {
 		if they appear in a domain name's AAAA records, and
 		DNS64 will be applied to any A records the domain
 		name owns.  If not defined, <command>exclude</command>
-		defaults to none.
+		defaults to ::ffff:0.0.0.0/96.
 	      </para>
 	      <para>
 		A optional <command>suffix</command> can also
@@ -6435,6 +6432,37 @@ options {
 		    9.
 		  </simpara>
 		</note>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><command>trust-anchor-telemetry</command></term>
+	      <listitem>
+		<para>
+		  Causes <command>named</command> to send specially-formed
+		  queries once per day to domains for which trust anchors
+		  have been configured via <command>trusted-keys</command>,
+		  <command>managed-keys</command>,
+		  <command>dnssec-validation auto</command>, or
+		  <command>dnssec-lookaside auto</command>.
+		</para>
+		<para>
+		  The query name used for these queries has the
+		  form "_ta-xxxx(-xxxx)(...)".&lt;domain&gt;, where
+		  each "xxxx" is a group of four hexadecimal digits
+		  representing the key ID of a trusted DNSSEC key.
+		  The key IDs for each domain are sorted smallest
+		  to largest prior to encoding. The query type is NULL.
+		</para>
+		<para>
+		  By monitoring these queries, zone operators will
+		  be able to see which resolvers have been updated to
+		  trust a new key; this may help them decide when it
+		  is safe to remove an old one.
+		</para>
+		<para>
+		  The default is <userinput>yes</userinput>.
+		</para>
 	      </listitem>
 	    </varlistentry>
 
@@ -18268,6 +18296,7 @@ allow-query { !{ !10/8; any; }; key example; };
 
     <reference xml:id="Bv9ARM.ch13"><info><title>Manual pages</title></info>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/dig/dig.docbook"/>
+      <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/tools/mdig.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/dig/host.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/delv/delv.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/python/dnssec-checkds.docbook"/>
@@ -18286,6 +18315,7 @@ allow-query { !{ !10/8; any; }; key example; };
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/check/named-checkconf.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/check/named-checkzone.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/tools/named-journalprint.docbook"/>
+      <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/tools/named-nzd2nzf.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/tools/named-rrchecker.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/nsupdate/nsupdate.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/rndc/rndc.docbook"/>
@@ -18297,6 +18327,10 @@ allow-query { !{ !10/8; any; }; key example; };
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/tools/genrandom.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/tools/isc-hmac-fixup.docbook"/>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/tools/nsec3hash.docbook"/>
+      <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/pkcs11/pkcs11-destroy.docbook"/>
+      <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/pkcs11/pkcs11-list.docbook"/>
+      <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/pkcs11/pkcs11-keygen.docbook"/>
+      <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="../../bin/pkcs11/pkcs11-tokens.docbook"/>
     </reference>
 
   </book>

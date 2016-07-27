@@ -32,15 +32,14 @@ class keyseries:
             for alg, keys in kdict[zone].items():
                 for k in keys.values():
                     if k.sep:
-                        self._K[zone][alg].append(k)
+                        if not (k.delete() and k.delete() < now):
+                          self._K[zone][alg].append(k)
                     else:
-                        self._Z[zone][alg].append(k)
+                        if not (k.delete() and k.delete() < now):
+                          self._Z[zone][alg].append(k)
 
-                for group in [self._K[zone][alg], self._Z[zone][alg]]:
-                    group.sort()
-                    for k in group:
-                        if k.delete() and k.delete() < now:
-                            group.remove(k)
+                self._K[zone][alg].sort()
+                self._Z[zone][alg].sort()
 
     def __iter__(self):
         for zone in self._zones:
@@ -125,7 +124,7 @@ class keyseries:
             prev.commit(self._context['settime_path'], **kwargs)
             key = prev.generate_successor(self._context['keygen_path'],
                                           self._context['randomdev'],
-                                          **kwargs)
+                                          prepub, **kwargs)
 
             key.setinactive(key.activate() + rp, **kwargs)
             key.setdelete(key.inactive() + postpub, **kwargs)
