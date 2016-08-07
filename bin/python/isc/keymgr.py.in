@@ -57,6 +57,10 @@ def parse_args():
                       os.path.join(utils.prefix('sbin'), 'dnssec-keygen'))
     settime = set_path('dnssec-settime',
                        os.path.join(utils.prefix('sbin'), 'dnssec-settime'))
+    dig = set_path('dig',
+                   os.path.join(utils.prefix('bin'), 'dig'))
+    dsfromkey = set_path('dnssec-dsfromkey',
+                         os.path.join(utils.prefix('sbin'), 'dnssec-dsfromkey'))
 
     parser = argparse.ArgumentParser(description=prog + ': schedule '
                                      'DNSSEC key rollovers according to a '
@@ -78,6 +82,15 @@ def parse_args():
     parser.add_argument('-s', dest='settime', default=settime, type=str,
                         help='Path to \'dnssec-settime\'',
                         metavar='path')
+    parser.add_argument('-d', '--dig', dest='dig', default=dig, type=str,
+                        help='Path to \'dig\'',
+                        metavar='path')
+    parser.add_argument('-D', '--dsfromkey', dest='dsfromkey', default=dsfromkey, type=str,
+                        help='Path to \'dnssec-dsfromkey\'',
+                        metavar='path')
+    parser.add_argument('-l', '--lookaside', dest='lookaside',
+                        action='store_true', default=False,
+                        help='Use DLV lookaside for DS query')
     parser.add_argument('-k', dest='no_zsk',
                         action='store_true', default=False,
                         help='Only apply policy to key-signing keys (KSKs)')

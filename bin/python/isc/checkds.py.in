@@ -101,7 +101,9 @@ def check(zone, args, masterfile=None, lookaside=None):
 
     klist = []
 
-    if masterfile:
+    if keyinput:
+        fp = keyinput
+    elif masterfile:
         cmd = [args.dsfromkey, "-f", masterfile]
         if lookaside:
             cmd += ["-l", lookaside]
