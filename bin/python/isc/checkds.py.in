@@ -89,7 +89,7 @@ class SECRR:
 # Generate a set of expected DS/DLV records from the DNSKEY RRset,
 # and report on congruency.
 ############################################################################
-def check(zone, args, masterfile=None, lookaside=None):
+def check(zone, args, masterfile=None, lookaside=None, keyinput=None):
     rrlist = []
     cmd = [args.dig, "+noall", "+answer", "-t", "dlv" if lookaside else "ds",
            "-q", zone + "." + lookaside if lookaside else zone]

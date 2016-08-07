@@ -162,7 +162,7 @@ class keyseries:
 
         # Check consistency between local DNSKEY records and
         # DS records from parent zone retrieved by DNS query
-        if not checkds(zone, **kwargs, None, None, ds_update_input):
+        if not checkds(zone, kwargs, None, None, ds_update_input):
             # Send DNSKEY to external update command
             print("# %s" % ' '.join(ds_update_cmd))
             p = Popen(ds_update_cmd, stdin=PIPE, \
