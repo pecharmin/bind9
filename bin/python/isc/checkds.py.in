@@ -124,6 +124,7 @@ def check(zone, args, masterfile=None, lookaside=None):
         return False
 
     found = False
+    keymiss = False
     for rr in klist:
         if rr in rrlist:
             print("%s for KSK %s/%03d/%05d (%s) found in parent" %
@@ -134,9 +135,15 @@ def check(zone, args, masterfile=None, lookaside=None):
             print("%s for KSK %s/%03d/%05d (%s) missing from parent" %
                   (rr.rrtype, rr.rrname.strip('.'), rr.keyalg,
                    rr.keyid, SECRR.hashalgs[rr.hashalg]))
+            keymiss = True
 
-    if not found:
-        print("No %s records were found for any DNSKEY" % ("DLV" if lookaside else "DS"))
+    if args.allcovered and keymiss:
+        print("Not all DNSKEY records are covered by a %s record" %
+              ("DLV" if lookaside else "DS"))
+        found = False
+    elif not found:
+        print("No %s records were found for any DNSKEY" %
+              ("DLV" if lookaside else "DS"))
 
     return found
 
@@ -162,6 +169,9 @@ def parse_args():
                         default=os.path.join(prefix(sbindir),
                                              'dnssec-dsfromkey'),
                         type=str, help='path to \'dig\'')
+    parser.add_argument('-A', '--allcovered', dest='allcovered',
+                        action='store_true', default=False,
+                        help='all DNSKEY records must be covered')
     parser.add_argument('-v', '--version', action='version',
                         version=version)
     args = parser.parse_args()
