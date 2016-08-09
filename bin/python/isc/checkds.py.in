@@ -124,14 +124,14 @@ def check(zone, args, masterfile=None, lookaside=None):
         return False
 
     found = False
-    keysfound = 0
+    rrmatches = 0
     for rr in klist:
         if rr in rrlist:
             print("%s for KSK %s/%03d/%05d (%s) found in parent" %
                   (rr.rrtype, rr.rrname.strip('.'), rr.keyalg,
                    rr.keyid, SECRR.hashalgs[rr.hashalg]))
             found = True
-            keysfound += 1
+            rrmatches += 1
         else:
             print("%s for KSK %s/%03d/%05d (%s) missing from parent" %
                   (rr.rrtype, rr.rrname.strip('.'), rr.keyalg,
@@ -140,7 +140,7 @@ def check(zone, args, masterfile=None, lookaside=None):
     if not found:
         print("No %s records were found for any DNSKEY" %
               ("DLV" if lookaside else "DS"))
-    if args.allkeys and keysfound < len(klist):
+        if args.allkeys and ( rrmatches < len(rrlist) or len(rrlist) < len(klist) ):
         print("Not all DNSKEY records are covered by a %s record" %
               ("DLV" if lookaside else "DS"))
         found = False
