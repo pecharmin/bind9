@@ -137,7 +137,7 @@ def check(zone, args, masterfile=None, lookaside=None):
                    rr.keyid, SECRR.hashalgs[rr.hashalg]))
             keymiss = True
 
-    if args.allcovered and keymiss:
+    if args.allkeys and keymiss:
         print("Not all DNSKEY records are covered by a %s record" %
               ("DLV" if lookaside else "DS"))
         found = False
@@ -169,7 +169,7 @@ def parse_args():
                         default=os.path.join(prefix(sbindir),
                                              'dnssec-dsfromkey'),
                         type=str, help='path to \'dig\'')
-    parser.add_argument('-A', '--allcovered', dest='allcovered',
+    parser.add_argument('-A', '--allkeys', dest='allkeys',
                         action='store_true', default=False,
                         help='all DNSKEY records must be covered')
     parser.add_argument('-v', '--version', action='version',
